@@ -128,7 +128,7 @@ class SegLogFunction():
         for i in range(1, len(feature_index)):
             if feature_index[i] - feature_index[i-1] > 100000:
                 # max() in case the index start from 0, and the end will not reach the end of the signal, so it's safe
-                feature_split[f'split_{split_num}'] = [max(index_num-buffer, 0), feature_index[i-1]+buffer]
+                feature_split[f'split_{split_num}'] = [max(index_num - buffer, 0), feature_index[i-1] + buffer]
                 split_num += 1
                 index_num = feature_index[i]
 
