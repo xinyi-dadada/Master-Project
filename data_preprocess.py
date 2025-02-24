@@ -5,7 +5,8 @@ import random
 import os
 from sklearn.preprocessing import StandardScaler
 from seg_cnn_prep import SegmentCNNPrepare
-#from igts import *
+
+
 class DivideData():
     def __init__(self, data_path):
         # input data and tasks info
@@ -96,8 +97,6 @@ class DivideData():
             #for T0 to T6, store the signal for each task
             for j in selected_task:
                 start, end = task_all[f'T_{j}']
-                # choose the task index, but still need to explode
-                # ###one_task = participant.iloc[start:end + 1, :6]
                 # prepare an array for storing signal data for 6 channels
                 task_arr = np.empty((6, end-start))
                 k = 0 # initialize for channels
@@ -124,32 +123,6 @@ class DivideData():
                 df = pd.DataFrame(task_arr.T, columns=col_names)
                 df.to_parquet(f'{file_path}.parquet', engine='fastparquet')
 
-                """
-                # compute mean for each row
-                df_merged = df.mean(axis=1)
-                df_merged_mean_rolling = df_merged.rolling(window=256, axis=0).mean()
-                plt.figure(figsize=(18, 6))
-                plt.plot(df_merged_mean_rolling, alpha=0.3, label=f'T_{j}')
-                plt.legend()
-                plt.savefig(f'file_path_hori')
-                plt.close()
-                
-                
-                # plot this is for all 6 channels
-                fig, ax = plt.subplots(figsize=(18, 6))
-                for m in range(6):
-                    ax.plot(task_arr[m], label=col_names[m], alpha = 0.3)
-                ax.legend()
-                plt.savefig(file_path)
-                plt.close()
-                
-                # save as dataframe and plot all 6 channels in one figure
-                df_merged_mean_rolling = pd.DataFrame(df_merged_mean_rolling, columns=[f'T_{j}'])
-                df_merged_mean_rolling.to_parquet(f'{file_path}_hori.parquet', engine='fastparquet')
-                """
-
-
-
     def signal_process(self, arr, part_num=None):
 
         df = pd.DataFrame({
@@ -164,36 +137,6 @@ class DivideData():
         #s_hat_hat = s_hat + np.abs(np.min(s_hat))
         return s_hat
 
-
-        """
-        process for thresholding to segment the data
-        :param s: a time series
-        :return:
-        
-        col_names = df.columns
-        s_channels = []
-        for col in col_names:
-            df_s = df[col]
-            df_exploded = df_s.explode(col)
-            exploded_list = df_exploded.tolist()
-            s = np.array(exploded_list)
-
-            plt.plot(s, label='signal', alpha=0.5, color='yellow')
-
-
-            s_hat = s - np.mean(s)
-            #s_hat = segprepare.normalize_neg_pos(s_hat)
-            s_hat_hat = s_hat + np.abs(np.min(s_hat))
-            #return s_hat_hat
-
-            s_hat_hat = pd.DataFrame(s_hat_hat, columns=[col])
-            s_channels.append(s_hat_hat)
-            #plt.plot(s_hat_hat, label='signal_hat^2', alpha=0.3, color='green')
-            #plt.legend()
-            #plt.savefig(f'/home/Shared/xinyi/blob1/thesis/logs_seg/2509_thresholding_{part_num}_{col}_compare_2.png')
-            #plt.close()
-        return s_channels
-        """
     def process_each_participant(self, one_participant):
         segprepare = SegmentCNNPrepare(data_path=self.data_path)
         # get the task info for this part
@@ -209,41 +152,13 @@ class DivideData():
         })
         s_hat_hat = self.signal_process(a1_rx)
         return s_hat_hat
-        """
-            for sublist in s_channels:
-                column_names = sublist[0]
-            data = [sublist[1] for sublist in s_channels]
-            data = list(zip(*data))
-            s_channels_df = pd.DataFrame(data, columns=column_names)
-            all_part[f'part_{i + 1}'] = s_channels_df
-        """
 
-
-
-        """
-            for title in col_names:
-                part_df = one_participant[title]
-                df_exploded = part_df.explode(title)
-                exploded_list = df_exploded.tolist()
-                exploded_list = pd.DataFrame(exploded_list)
-                df_exploded.append(exploded_list)
-            df_exploded = pd.concat(df_exploded, axis=1)
-            df_scaled = pd.DataFrame(scaler.fit_transform(df_exploded), columns=df_exploded.columns)
-            df_mean = df_scaled.mean()
-            df_std = df_scaled.std()
-            print('phryge!')
-
-                #self.plot_figure(df=df, title=name, task=task_part, num=i)
-                #self.plot_figure_task(df=df, title=name, task=task_part, num=i)
-        """
     def plot_figure(self, df, title, task, num=None):
         data_series = pd.DataFrame(df)
         data_series_exploded = data_series.explode(title)
         merged_list = data_series_exploded[title].tolist()
 
-        #plt.figure(figsize=(36, 6))
-        #plt.plot(merged_list)
-        # only for one taskt
+        # only for one task
         for key, (min_val, max_val) in task.items():
             random_color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
             plt.plot(merged_list[min_val:max_val])
@@ -251,8 +166,9 @@ class DivideData():
         plt.legend()
         plt.title(title)
         plt.show()
-        #plt.savefig(f'figure/participant{num + 1}_{title}')  # need to update names
-        #plt.close()
+        plt.savefig(f'figure/participant{num + 1}_{title}')
+        plt.close()
+
     def plot_figure_task(self, df, title, task, num):
         """
         plot and store as npy for each task per participant
@@ -270,8 +186,8 @@ class DivideData():
         for key, (min_val, max_val) in task.items():
             plt.plot(merged_list[min_val:max_val])
             plt.show()
-            #plt.savefig(f'figure/participant{num + 1}_{title}_{key}')
-            #plt.close()
+            plt.savefig(f'figure/participant{num + 1}_{title}_{key}')
+            plt.close()
 
 
 
