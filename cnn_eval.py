@@ -7,6 +7,8 @@ from sklearn.metrics import confusion_matrix, classification_report, accuracy_sc
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+
+
 class CNNEvaluation():
     def __init__(self, torch_model, epoch, dataloader, fold_path):
         self.model = torch_model
@@ -65,7 +67,7 @@ class CNNEvaluation():
 
         # Save results to a CSV file
         df_results = pd.DataFrame(results)
-        df_results.to_csv(f'{self.fold_path}/cnneval_1711_results{epoch}.csv', index=False)
+        df_results.to_csv(f'{self.fold_path}/cnneval_1711_results{self.epoch}.csv', index=False)
 
         # Visualization
         # Calculate confusion matrix and classification report after all epochs

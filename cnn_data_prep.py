@@ -2,8 +2,7 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset, DataLoader, TensorDataset
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold #k-fold cross validation
 ### This code is used to prepare the data for training model and evaluating ###
 
 class NestedArrayDataset(Dataset):
@@ -19,7 +18,6 @@ class NestedArrayDataset(Dataset):
         sample = torch.tensor(self.data[idx], dtype=torch.float32)
         label = torch.tensor(self.labels[idx], dtype=torch.float32)
         return sample, label
-
 class CNNDataPrepare():
     def __init__(self, path, name):
         self.path = path
@@ -38,7 +36,6 @@ class CNNDataPrepare():
             print(f"Batch {i} labels shape: {labels_batch.shape}")
             print(f"Batch {i} data sample: {data_batch[0]}")
             print(f"Batch {i} labels sample: {labels_batch[0]}")
-
     def prepare_tensor(self, training_data, training_labels):
         # column names for grouped set
         col_names = ['rx1_freq_a_channel_i_data', 'rx1_freq_a_channel_q_data',
