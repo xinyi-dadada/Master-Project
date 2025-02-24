@@ -1,4 +1,4 @@
-from data import DivideData
+from data_preprocess import DivideData
 import pandas as pd
 import os
 import re

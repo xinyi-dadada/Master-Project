@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from data import DivideData
+from data_preprocess import DivideData
 import re
 import os
 import glob

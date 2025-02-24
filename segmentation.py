@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import random
-import data
+import data_preprocess
 
 def plot_segments(data, segments, name):
     plt.figure(figsize=(15, 6))

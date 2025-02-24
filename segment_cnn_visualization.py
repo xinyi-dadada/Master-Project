@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from data import DivideData
+from data_preprocess import DivideData
 class SegmentVisual():
     def __init__(self, prediction, data_loader):
         self.output = prediction

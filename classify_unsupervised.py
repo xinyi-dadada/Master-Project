@@ -10,7 +10,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from scipy.fft import fft
-from data import DivideData
+from data_preprocess import DivideData
 
 class UnsupervisedClassify():
 

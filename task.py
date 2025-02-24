@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import random
-from data import DivideData
+from data_preprocess import DivideData
 
 path='13_06_22/radar_114/radar_114_data.parquet'
 data = pd.read_parquet(path)
