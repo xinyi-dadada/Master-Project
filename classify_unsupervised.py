@@ -16,7 +16,7 @@ class UnsupervisedClassify():
 
     def __init__(self, base_dir):
         self.base_dir = base_dir
-        self.tasks = pd.read_csv('/home/Shared/xinyi/blob1/thesis/data/task.csv')
+        self.tasks = pd.read_csv('~/thesis/data/task.csv')
 
     def rx_values(self, i_values, q_values):
         """
@@ -115,7 +115,7 @@ class PCAandKMeans():
         plt.title(f"PCA Components and Mean Value for Participant {participant_num}")
         plt.xlabel("Observation Index")
         plt.ylabel("Component Value")
-        plt.savefig(f'/home/Shared/xinyi/blob1/thesis/figure/result_pca/participant_{participant_num}.jpg')
+        plt.savefig(f'~/thesis/figure/result_pca/participant_{participant_num}.jpg')
         plt.close()
     def apply_PCA(self, df_new, n_tasks):
         fft_for_pca = df_new['fft_result']
@@ -202,14 +202,14 @@ class PCAandKMeans():
 
         plt.grid(axis='y')
         plt.tight_layout()
-        plt.savefig(f'/home/Shared/xinyi/blob1/thesis/figure/result_kmeans/cluster_{n_cluster}.jpg')
+        plt.savefig(f'~/thesis/figure/result_kmeans/cluster_{n_cluster}.jpg')
         plt.close()
 
 pca_kmeans = PCAandKMeans()
-radar_no = 112
+radar_no = ...
 
 # Set the base path, subfolders, and task filename
-base_dir = '/home/Shared/xinyi/blob1/thesis/data/parquet_samples/'
+base_dir = '~/thesis/data/parquet_samples/'
 unsupervied_classify = UnsupervisedClassify(base_dir)
 
 # Define the file pattern to search for radar files
@@ -246,5 +246,3 @@ pca_results = pd.DataFrame(pca_results)
 df_pca_results = pd.concat(pca_results, ignore_index=True)
 df_pca_results.to_parquet('/home/Shared/xinyi/blob1/thesis/pca_result.parquet')
 #pca_kmeans.Kmeans_result(df_new=df_all_participants, n_cluster=5)
-#pca_kmeans.Kmeans_result(df_new=df_all_participants, n_cluster=4)
-#pca_kmeans.Kmeans_result(df_new=df_all_participants, n_cluster=3)
