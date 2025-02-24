@@ -8,7 +8,7 @@ Project Name: Extracting Activities of Daily Living from Ambient Sensor
 * [reconstruct_data](data_label_par.py): merge each task per participant together as a nest numpy array into a parquet file
 * [preare_data](prepare_data.py): give the radar number, it will find the parquet data and divide by participants and required tasks
 * [dataset](dataset.py): merge all the participants and all tasks in one parquet file
-* [data](data.py): utils for data processing
+* [data](data_preprocess.py): utils for data processing
 
 ## Supervised Learning
 * [cnn process data](part_tasks.py): process the raw data per tasks, including 7 channels and task number
