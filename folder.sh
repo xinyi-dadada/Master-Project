@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-
+# Used to find the required files in each folder
 mkdir 17_06 20_06
 radar_folders=(radar_44 radar_51 radar_52 radar_53 radar_111 radar_112 radar_113 radar_114)
 cd 15_06
