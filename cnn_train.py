@@ -89,4 +89,4 @@ class CNNTrain():
 
     def train(self):
         self.train_model(self.dataloader)
-        print("Finshed training")
+        print("Finished training")
