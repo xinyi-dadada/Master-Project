@@ -3,10 +3,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import random
 import os
-from sklearn.preprocessing import StandardScaler
-from seg_cnn_prep import SegmentCNNPrepare
+import re
+import glob
 
 
+# Data Preprocessing
 class DivideData():
     def __init__(self, data_path):
         # input data and tasks info
@@ -69,15 +70,6 @@ class DivideData():
         except:
             print(participant)
 
-    def igts_usage(self, arr, k, step, par_num=None, count=None):
-        # IGTS
-        TD_TT, IG_arr, knee = TopDown(arr, k, step=step)
-        print(f'knee={knee}')
-        k = knee
-        TD_TT, IG_arr, knee = TopDown(arr, k, step=step)
-       # plot_segments(arr, TD_TT,
-                     # f'/home/Shared/xinyi/blob1/thesis/figure/IGTS/IGTS_igcul_k={k}_s={step}_{par_num}_{count}')
-
     def divide_task_parquet(self, selected_task=list):
         """
         for each participant, divide their task and save as a parquet file for further use
@@ -136,15 +128,52 @@ class DivideData():
         s_hat = s - np.mean(s)
         #s_hat_hat = s_hat + np.abs(np.min(s_hat))
         return s_hat
+    # function for merge channel i and q
+    def rx_values(self, i_values, q_values):
+        """
+        use to merge the i and q channels
+        :param i_values: e.g.'rx1_freq_a_channel_i_data'
+        :param q_values: e.g.'rx1_freq_a_channel_q_data'
+        :return: merged channels and i and q channels (flattened)
+        """
+        a1i = np.array([np.array(row) for row in i_values])
+        a1q = np.array([np.array(row) for row in q_values])
+
+        n = np.array(range(256)) / 256
+        f_c = 24_000_000_000  # 24 GHz
+        v = 2.0 * np.pi * f_c * n
+
+        value_rx = a1i * np.cos(v) + a1q + np.sin(v)
+        return value_rx, a1i, a1q
+
+    # prepare merged channels for input
+    def prepare_merged_channels(self, dt):
+        rx1_a_i = dt['rx1_freq_a_channel_i_data']
+        rx1_a_q = dt['rx1_freq_a_channel_q_data']
+        rx2_a_i = dt['rx2_freq_a_channel_i_data']
+        rx2_a_q = dt['rx2_freq_a_channel_q_data']
+        rx1_b_i = dt['rx1_freq_b_channel_i_data']
+        rx1_b_q = dt['rx1_freq_b_channel_q_data']
+
+        # merge!
+        a1_rx, a1_i_values, a1_q_values = self.rx_values(i_values=rx1_a_i, q_values=rx1_a_q)
+        a2_rx, a2_i_values, a2_q_values = self.rx_values(i_values=rx2_a_i, q_values=rx2_a_q)
+        b1_rx, b1_i_values, b1_q_values = self.rx_values(i_values=rx1_b_i, q_values=rx1_b_q)
+
+        # return a1_rx, a2_rx, b1_rx
+        a1_rx_nested_arr = a1_rx.tolist()
+        a2_rx_nested_arr = a2_rx.tolist()
+        b1_rx_nested_arr = b1_rx.tolist()
+
+        return a1_rx_nested_arr, a2_rx_nested_arr, b1_rx_nested_arr
 
     def process_each_participant(self, one_participant):
-        segprepare = SegmentCNNPrepare(data_path=self.data_path)
         # get the task info for this part
 
         one_participant = one_participant.reset_index(drop=True)
         #task_part = self.divide_task_index(one_participant)
         one_participant = one_participant.iloc[:, :6]
-        a1_rx, a2_rx, b1_rx = segprepare.prepare_merged_channels(one_participant)
+        a1_rx, a2_rx, b1_rx = self.prepare_merged_channels(one_participant)
         merged_df = pd.DataFrame({
             'a1_rx': a1_rx,
             'a2_rx': a2_rx,
@@ -186,8 +215,37 @@ class DivideData():
         for key, (min_val, max_val) in task.items():
             plt.plot(merged_list[min_val:max_val])
             plt.show()
-            plt.savefig(f'figure/participant{num + 1}_{title}_{key}')
+            plt.savefig(f'~/figure/participant{num + 1}_{title}_{key}')
             plt.close()
+
+    def concat_files(self, radar_no, concat_path):
+        """
+        concat all the participants data for certain radar
+        """
+        file_pattern = os.path.join(self.data_path, '**', f'radar_samples_192.168.67.{radar_no}*')
+        # get all file names for this radar
+        matching_files = glob.glob(file_pattern, recursive=True)
+        # contact all the files together and save
+        all_df = []
+        for file_path in matching_files:
+            df = pd.read_parquet(file_path)
+            all_df.append(df)
+        merged_df = pd.concat(all_df, ignore_index=True)
+        merged_df.to_parquet(concat_path)
+
+    def divide_by_tasks(self, dates, pattern=r'radar_samples_192\.168\.67\.112_\d+\.parquet', t=list):
+        # give the radar number, find the parquet data and divide by participants and required tasks
+        # t: list of required tasks
+        for date in dates:
+            folder_path = f'./data/parquet_samples/{date}_06_22'
+            all_files = os.listdir(folder_path)
+            file_name = [filename for filename in all_files if filename.startswith('radar_samples')]
+            for file in file_name:
+                match = re.match(pattern, file)
+                if match:
+                    self.divide_task_parquet(t)
+
+
 
 
 

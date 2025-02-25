@@ -14,8 +14,8 @@ from data_preprocess import DivideData
 class ProcessRawData():
     def __init__(self, radar_number):
         self.radar_number = radar_number
-        self.tasks = pd.read_csv('/home/Shared/xinyi/blob1/thesis/data/task.csv')
-        self.base_dir = '/home/Shared/xinyi/blob1/thesis/data/parquet_samples/'
+        self.tasks = pd.read_csv('~/thesis/data/task.csv')
+        self.base_dir = '~/thesis/data/parquet_samples/'
         #self.file_pattern = os.path.join(base_dir, '**', f'radar_samples_192.168.67.{self.radar_number}*')
 
     def divide_task_index(self, participant):
@@ -87,11 +87,12 @@ class ProcessRawData():
                     part_task_all.append(df_new)
 
         df_part_task_all = pd.concat(part_task_all, ignore_index=True)
-        df_part_task_all.to_parquet(f'/home/Shared/xinyi/blob1/thesis/radar_{self.radar_number}/all_part_tasks_1611.parquet')
-        print('wengweng~~')
+        # save the file
+        df_part_task_all.to_parquet(f'~/thesis/radar_{self.radar_number}/all_part_tasks_1611.parquet')
+
 # input the radar number for dividing
 process_data = ProcessRawData(114)
 process_data.prepare_data_cnn()
-#base_dir = '/home/Shared/xinyi/blob1/thesis/data/parquet_samples/'
+#base_dir = '~/thesis/data/parquet_samples/'
 #radar_no = 112
 #file_pattern = os.path.join(base_dir, '**', f'radar_samples_192.168.67.{radar_no}*')
