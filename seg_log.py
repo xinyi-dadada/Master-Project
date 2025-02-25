@@ -151,7 +151,7 @@ class SegLogFunction():
         task_index = divide_data.divide_task_index(data_part1)
 
         plt.figure(figsize=(12, 16))
-        sns.set(style='whitegrid')
+        sns.set_theme(style='whitegrid')
         sns.color_palette("pastel")
         plt.subplots_adjust(hspace=0.5)
         # plot the original signal and the true tasks
