@@ -1,5 +1,7 @@
 # Extracting Activities of Daily Living from Ambient Sensor
 
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)  ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)  
+
 ## Overview
 
 This project applies machine learning techniques to classify and segment daily activities using ambient sensor data. The repository includes supervised and unsupervised classification models, data preprocessing scripts, and segmentation methods such as IGTS and Logistic Regression Function.
