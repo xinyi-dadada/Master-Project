@@ -18,7 +18,7 @@ Definitions:
 Things to note:
  - The splits returned in the time series are taken to be after the kth element, not before
 
-
+Attempt of Segmentation
 """
 import numpy as np
 
