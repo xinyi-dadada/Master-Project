@@ -27,9 +27,10 @@ pip install -r requirements.txt
 Run the following scripts to preprocess data, train models, and evaluate performance:
 
 ```bash
-python data_preprocess.py  # Prepare data
-python cnn_train.py        # Train CNN model
-python cnn_eval.py         # Evaluate model
+python data_preprocess.py        # Prepare data
+python result_igts.py            # Run sgmentation by IGTS
+python seg_log.py                # Run segmentation by logistic regression function
+python cnn_usage.py              # Run supervised classification
 python classify_unsupervised.py  # Run unsupervised classification
 ```
 
@@ -46,15 +47,13 @@ python classify_unsupervised.py  # Run unsupervised classification
 │   │── 📜 result_igts.py                # IGTS segmentation results
 │   │── 📜 seg_log.py                    # Logistic Regression segmentation
 │── 📂 Supervised Classification
+│   │── 📜 cnn_usage.py                  # CNN model usage
 │   │── 📜 cnn.py                        # CNN-based classification
-│   │── 📜 cnn_train.py                  # Training script
-│   │── 📜 cnn_classification_usage.py   # CNN classification usage
 │   │── 📜 cnn_data_prep.py              # Data preparation for CNN
+│   │── 📜 cnn_train.py                  # Training script
+│   │── 📜 cnn_eval.py                   # Model evaluation script
 │── 📂 Unsupervised Classification
 │   │── 📜 classify_unsupervised.py      # Unsupervised learning model
-│── 📂 Model Evaluation
-│   │── 📜 cnn_eval.py                   # Model evaluation script
-│   │── 📜 cnn_usage.py                  # CNN model usage
 
 ```
 
